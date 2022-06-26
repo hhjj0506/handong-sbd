@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { auth, logInWithEmailAndPassword, signInWithGoogle } from "./Firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import "./Login.css";
+import Button from '@mui/material/Button';
 
 function Login() {
   const [user, loading, error] = useAuthState(auth);
@@ -18,11 +19,12 @@ function Login() {
 
   return (
     <div className="login">
-      <div className="login__container">
-        <button className="login__btn login__google" onClick={signInWithGoogle}>
-          Login with Google
-        </button>
-      </div>
+        <Button
+            variant="contained"
+            onClick={signInWithGoogle}
+        >
+         Login with Google
+        </Button>
     </div>
   );
 }

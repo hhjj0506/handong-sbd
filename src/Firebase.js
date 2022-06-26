@@ -3,10 +3,6 @@ import {
  GoogleAuthProvider,
  getAuth,
  signInWithPopup,
- signInWithEmailAndPassword,
- createUserWithEmailAndPassword,
- sendPasswordResetEmail,
- signOut,
 } from "firebase/auth";
 import {
  getFirestore,
@@ -35,6 +31,9 @@ const signInWithGoogle = async () => {
   try {
     const res = await signInWithPopup(auth, googleProvider);
     const user = res.user;
+    if (!user.email.includes("handong.ac.kr")) {
+        return -1;
+    }
     const q = query(collection(db, "users"), where("uid", "==", user.uid));
     const docs = await getDocs(q);
     if (docs.docs.length === 0) {
