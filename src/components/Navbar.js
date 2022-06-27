@@ -3,7 +3,8 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../Firebase";
 import { signOut } from "firebase/auth";
-import { Avatar, Grid, IconButton, Menu, MenuItem, Button } from "@mui/material";
+import { Avatar, Grid, IconButton, Menu, MenuItem, Button, Paper } from "@mui/material";
+import "./Navbar.css"
 
 function Navbar() {
     const [user] = useAuthState(auth);
@@ -26,6 +27,7 @@ function Navbar() {
     }
 
     return (
+        <Paper elevation={3} className="navbar">
         <Grid container>
             <Grid item xs={2}>
             <Button onClick={() => navigate("/dashboard")}><h2>강한동</h2></Button>
@@ -57,6 +59,7 @@ function Navbar() {
             </Menu>
             </Grid>
         </Grid>
+        </Paper>
     );
 }
 

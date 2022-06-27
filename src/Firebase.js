@@ -9,6 +9,7 @@ import {
  query,
  getDocs,
  collection,
+ documentId,
  where,
  addDoc,
 } from "firebase/firestore";
@@ -34,15 +35,20 @@ const signInWithGoogle = async () => {
     if (!user.email.includes("handong.ac.kr")) {
         return -1;
     }
-    const q = query(collection(db, "users"), where("uid", "==", user.uid));
+    const q = db.collection("users").doc(user.uid);
     const docs = await getDocs(q);
     if (docs.docs.length === 0) {
-      await addDoc(collection(db, "users"), {
+      await db.collection("users").doc(user.uid).set({
         uid: user.uid,
         name: user.displayName,
         email: user.email,
         nickname: null,
-
+        major: null,
+        profilePic: null,
+        content: null,
+        squat: 0,
+        deadlift: 0,
+        bench: 0,
       });
     }
   } catch (err) {

@@ -21,6 +21,9 @@ function Profile() {
         <body>
             <Container>
                 <Navbar/>
+                <Paper elevation={3}>
+                    <Avatar />
+                </Paper>
             </Container>
         </body>
     );
