@@ -6,8 +6,21 @@ import { auth, db, storage } from "./Firebase";
 import { signOut, updateProfile } from "firebase/auth";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { query, collection, getDocs, where, doc, setDoc, orderBy, onSnapshot, QuerySnapshot } from "firebase/firestore";
-import { Avatar, Grid, IconButton, Menu, Paper, MenuItem, Divider, CircularProgress, Button } from "@mui/material";
+import { Avatar, Grid, IconButton, Menu, Paper, MenuItem, Divider, CircularProgress, Button, Modal, TextField, Box, Input } from "@mui/material";
 import Navbar from "./components/Navbar";
+import "./Profile.css";
+
+const boxStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
 
 function Profile() {
     const [user, loading, error] = useAuthState(auth);
@@ -17,6 +30,8 @@ function Profile() {
     const [desc, setDesc] = useState("");
     const [imgURL, setImgURL] = useState("");
     const navigate = useNavigate();
+
+    const userModalClose = () => setOpenUserModal(false);
     
     // 이름과 사진을 제외한 프로필의 모든 정보
     const updateProfileInfo = async (e) => {
@@ -29,6 +44,7 @@ function Profile() {
         } catch (err) {
             alert(err)
         }
+        userModalClose();
     }
 
     // 사진과 이름 바꾸기
@@ -37,7 +53,7 @@ function Profile() {
         e.preventDefault();
         const file = e.target[0]?.files[0];
         if (!file) return;
-        const storageRef = ref(storage, 'profile/${user?.photoURL}');
+        const storageRef = ref(storage, `profile/${user?.uid}`);
         const upload = uploadBytesResumable(storageRef, file);
 
         upload.on("state_changed",
@@ -79,8 +95,22 @@ function Profile() {
                     <h3>소개</h3>
                     <p>{}</p>
                     <h3>경력</h3>
+                    <p>{}</p>
                 </Paper>
             </Container>
+            <Modal
+                open={openUserModal}
+                onClose={userModalClose}
+            >
+                <Box sx={boxStyle}>
+                    <form onSubmit={updateUserInfo}>
+                        <Input type="file" />
+                        <TextField fullWidth label="닉네임" variant="outlined" defaultValue={user?.displayName}
+                        onChange={(e) => setName(e.target.value)} />
+                        <Button type="sybmit">수정</Button>
+                    </form>
+                </Box>
+            </Modal>
         </body>
     );
 }
